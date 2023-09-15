@@ -1,0 +1,1 @@
+cmd_/home/gui/IHS/PROJETO/Triv/study/hello_world.mod := printf '%s\n'   hello_world.o | awk '!x[$$0]++ { print("/home/gui/IHS/PROJETO/Triv/study/"$$0) }' > /home/gui/IHS/PROJETO/Triv/study/hello_world.mod

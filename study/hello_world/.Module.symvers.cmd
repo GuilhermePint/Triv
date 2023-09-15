@@ -1,0 +1,1 @@
+cmd_/home/gui/IHS/PROJETO/Triv/study/Module.symvers :=  scripts/mod/modpost -m -a     -o /home/gui/IHS/PROJETO/Triv/study/Module.symvers -T /home/gui/IHS/PROJETO/Triv/study/modules.order -i Module.symvers -e 
