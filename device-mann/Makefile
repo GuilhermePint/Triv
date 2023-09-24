@@ -1,7 +1,11 @@
-CC = gcc
-CFLAGS = -Wall 
-list_video_devices: list_video_devices.c
-	$(CC) $(CFLAGS) -o $@ $^
+TARGETS=test yuv4mpeg_to_v4l2 ondemandcam yuv420_infiniteloop
+
+.PHONY: all clean
+
+all: $(TARGETS)
+
+ondemandcam: ondemandcam.c
+	gcc -o ondemandcam ondemandcam.c -lrt -lpthread
+
 clean:
-	rm -f list_video_devices
-.PHONY: clean
+	-rm $(TARGETS)
