@@ -2,5 +2,9 @@
     "C_Cpp.errorSquiggles": "enabled",
     "files.associations": {
         "videodev2.h": "c"
-    }
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "python.formatting.provider": "none"
 }
