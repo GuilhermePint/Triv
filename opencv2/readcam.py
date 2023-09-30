@@ -38,7 +38,7 @@ while True:
 
     if red_pixels > 1000 and not red_audio:
         print("Vermelho")
-        lb.click(50,60,2,1)
+        lb.click(50,70,2,1)
         red_audio = True
 
     elif red_pixels == 0:
