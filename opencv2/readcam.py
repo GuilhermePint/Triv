@@ -1,10 +1,6 @@
 import cv2
 import numpy as np
-import pygame
-
-# audio init
-pygame.mixer.init()
-volume = 0.1
+import libclicker as lb
 
 cap = cv2.VideoCapture("RGB.mp4")
 
@@ -41,14 +37,12 @@ while True:
     red_pixels = cv2.countNonZero(mask)
 
     if red_pixels > 1000 and not red_audio:
-        pygame.mixer.music.load("brownnoise.wav")
-        pygame.mixer.music.set_volume(volume)
-        pygame.mixer.music.play()
-
+        print("Vermelho")
+        lb.click(50,60,2,1)
         red_audio = True
+
     elif red_pixels == 0:
         red_audio = False
-        pygame.mixer.music.stop()
 
     cv2.imshow("Frame", frame)
 
