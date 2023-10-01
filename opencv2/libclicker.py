@@ -56,6 +56,8 @@ def move_mouse(x : int, y : int):
     device.emit(uinput.REL_X, x//2)
     device.emit(uinput.REL_Y, y//2)
 
+    
+
 # Click at a given position
 
 def click(x : int, y : int, btn : int = 0, count : int = 1):
