@@ -4,7 +4,32 @@ import os
 import HandDetector as hd
 import Xlib.display
 import numpy as np
-import libclicker as lb
+#import libclicker as lb
+import uinput
+
+#mouse input keys
+keys = [
+    uinput.BTN_LEFT,
+    uinput.BTN_MIDDLE,
+    uinput.BTN_RIGHT,
+    uinput.REL_X,
+    uinput.REL_Y,
+    uinput.REL_WHEEL,
+    uinput.REL_HWHEEL,
+]
+
+#starting Device
+device = uinput.Device(keys)
+
+# Wait for the system to detect the new device
+time.sleep(1)
+
+def move_mouse(x : int, y : int):
+    device.emit(uinput.REL_X, -25000)
+    device.emit(uinput.REL_Y, -25000)
+    device.emit(uinput.REL_X, x//2)
+    device.emit(uinput.REL_Y, y//2)
+
 
 def get_screen_resolution():
     display = Xlib.display.Display()
@@ -47,7 +72,8 @@ while True:
         if fingers[1] == 1 and fingers[0] == 0:
             x3 = np.interp(x1,(0,width),(0,screen_width))
             y3 = np.interp(y1,(0,height),(0,screen_height))
-            lb.move_mouse(x1,y1)
+            move_mouse(x1,y1)
+            time.sleep(0.02)
 
 
         
