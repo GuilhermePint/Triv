@@ -7,6 +7,7 @@ import numpy as np
 #import libclicker as lb
 import uinput
 
+
 #mouse input keys
 keys = [
     uinput.BTN_LEFT,
@@ -56,6 +57,8 @@ def click(x : int, y : int, btn : int = 0, count : int = 1):
             device.emit(uinput.BTN_RIGHT, 0)
  """
 
+
+
 def get_screen_resolution():
     display = Xlib.display.Display()
     screen = display.screen()
@@ -79,8 +82,8 @@ def main():
         screen_width, screen_height = get_screen_resolution()
         print(f"Screen Resolution: {screen_width}x{screen_height}")
 
-        frameLess = 100
-        width, height = 680, 440
+        reductionFrame = 100
+        width, height = 640, 480
 
         cap = cv2.VideoCapture(0)
         cap.set(3,width)
@@ -88,14 +91,21 @@ def main():
         #hand detector
         detector = hd.handDetector(maxHands=1)
 
+        #close Hand Variable
+        five_finger_timer = 0
+
         #previous Frame
         pTime = 0
+        mouseClicking = False
 
         while True:
             #image and Hand Detection
             ret, img = cap.read()
             img = detector.findHand(img,draw=False)
             lmList, bbox = detector.findPosition(img)
+
+            if five_finger_timer == 80:
+                break
 
             #tip and thumb
             if len(lmList)!=0:
@@ -105,29 +115,38 @@ def main():
 
                 #fingers Up
                 fingers = detector.fingersUp()
+
+                if all(item == 1 for item in fingers):
+                    five_finger_timer += 1
+                    #print(five_finger_timer)
+                else:
+                    five_finger_timer = 0
                 
                 #tip Up, move Mode
                 if fingers[1] == 1 and fingers[0] == 0:
-                    cv2.rectangle(img,(width,height),(width-frameLess,height-frameLess),(255,255,255), 2)
-                    x3 = np.interp(x1,(0,width),(0,screen_width))
-                    y3 = np.interp(y1,(0,height),(0,screen_height))
+                    cv2.rectangle(img,(reductionFrame,reductionFrame),(width-reductionFrame,height-reductionFrame),(255,255,255), 2)
+                    x3 = np.interp(x1,(reductionFrame,width-reductionFrame),(0,screen_width))
+                    y3 = np.interp(y1,(reductionFrame,height-reductionFrame),(0,screen_height))
 
-                    #move_mouse(x3,y3)
                     #move_mouse(int(x3),int(y3))
+                    #emit movements into uinput mouse
                     device.emit(uinput.REL_X, -25000)
                     device.emit(uinput.REL_Y, -25000)
-                    device.emit(uinput.REL_X, int(x3)//2)
+                    device.emit(uinput.REL_X, (screen_width - int(x3))//2)
                     device.emit(uinput.REL_Y, int(y3)//2) 
 
                     time.sleep(0.02)
 
                 if fingers[1] == 1 and fingers[0] == 1:
+                    cv2.rectangle(img,(reductionFrame,reductionFrame),(width-reductionFrame,height-reductionFrame),(255,255,255), 2)
                     lenght, img, linePoint = detector.findDistance(8,4,img,r=5)
-                    device.emit(uinput.BTN_LEFT, 1)
-                    if lenght>60:
+                    if lenght>110 and not mouseClicking:
                         cv2.rectangle(img,(linePoint[4]-10,linePoint[5]-10),(linePoint[4]+10,linePoint[5]+10),(255,255,255),2)
-
-                device.emit(uinput.BTN_LEFT, 0)
+                        device.emit(uinput.BTN_LEFT, 1)
+                        mouseClicking = True
+                    else:
+                        mouseClicking = False                    
+                    device.emit(uinput.BTN_LEFT, 0)    
 
             #fpsDisplay
             cTime = time.time()
