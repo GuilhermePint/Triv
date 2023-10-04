@@ -4,9 +4,7 @@ import os
 import HandDetector as hd
 import Xlib.display
 import numpy as np
-#import libclicker as lb
 import uinput
-
 
 #mouse input keys
 keys = [
@@ -56,8 +54,6 @@ def click(x : int, y : int, btn : int = 0, count : int = 1):
             device.emit(uinput.BTN_RIGHT, 1)
             device.emit(uinput.BTN_RIGHT, 0)
  """
-
-
 
 def get_screen_resolution():
     display = Xlib.display.Display()
@@ -132,17 +128,18 @@ def main():
                     #emit movements into uinput mouse
                     device.emit(uinput.REL_X, -25000)
                     device.emit(uinput.REL_Y, -25000)
-                    device.emit(uinput.REL_X, (screen_width - int(x3))//2)
+                    device.emit(uinput.REL_X, (screen_width - int(x3))//2, syn=False)
                     device.emit(uinput.REL_Y, int(y3)//2) 
 
-                    time.sleep(0.02)
+                    time.sleep(0.05)
 
                 if fingers[1] == 1 and fingers[0] == 1:
                     cv2.rectangle(img,(reductionFrame,reductionFrame),(width-reductionFrame,height-reductionFrame),(255,255,255), 2)
                     lenght, img, linePoint = detector.findDistance(8,4,img,r=5)
                     if lenght>110 and not mouseClicking:
                         cv2.rectangle(img,(linePoint[4]-10,linePoint[5]-10),(linePoint[4]+10,linePoint[5]+10),(255,255,255),2)
-                        device.emit(uinput.BTN_LEFT, 1)
+                        #device.emit_click(uinput.BTN_LEFT, 1)
+                        device.emit_click((0x01, 0x110), 1)
                         mouseClicking = True
                     else:
                         mouseClicking = False                    
