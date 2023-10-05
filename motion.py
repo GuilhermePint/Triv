@@ -6,7 +6,6 @@ import Xlib.display
 import numpy as np
 import uinput
 
-#mouse input keys
 keys = [
     uinput.BTN_LEFT,
     uinput.BTN_MIDDLE,
@@ -16,44 +15,6 @@ keys = [
     uinput.REL_WHEEL,
     uinput.REL_HWHEEL,
 ]
-
-""" #starting Device
-device = uinput.Device(keys)
-time.sleep(1)
-
-def move_mouse(x : int, y : int):
-    device.emit(uinput.REL_X, -25000)
-    device.emit(uinput.REL_Y, -25000)
-    device.emit(uinput.REL_X, x//2)
-    device.emit(uinput.REL_Y, y//2) 
-    print(f"Post: {x//2} x {y//2}")
-    
-def click(x : int, y : int, btn : int = 0, count : int = 1):
-    # Check each argument
-
-    if btn > 2 or btn < 0 or type(btn) != int:
-        raise ValueError('btn must be 0, 1 or 2')
-    if count > 3 or count < 1 or type(count) != int:
-        raise ValueError('count must be 1, 2 or 3')
-    
-    move_mouse(x, y)
-    
-    # Click the desired button
-    if btn == 0:
-        for i in range(count):
-            device.emit(uinput.BTN_LEFT, 1)
-            device.emit(uinput.BTN_LEFT, 0)
-    elif btn == 1:
-        for i in range(count):
-            time.sleep(0.3)
-            device.emit(uinput.BTN_MIDDLE, 1)
-            device.emit(uinput.BTN_MIDDLE, 0)
-    elif btn == 2:
-        for i in range(count):
-            time.sleep(0.3)
-            device.emit(uinput.BTN_RIGHT, 1)
-            device.emit(uinput.BTN_RIGHT, 0)
- """
 
 def get_screen_resolution():
     display = Xlib.display.Display()
@@ -100,7 +61,7 @@ def main():
             img = detector.findHand(img,draw=False)
             lmList, bbox = detector.findPosition(img)
 
-            if five_finger_timer == 80:
+            if five_finger_timer == 30:
                 break
 
             #tip and thumb
@@ -128,22 +89,21 @@ def main():
                     #emit movements into uinput mouse
                     device.emit(uinput.REL_X, -25000)
                     device.emit(uinput.REL_Y, -25000)
-                    device.emit(uinput.REL_X, (screen_width - int(x3))//2, syn=False)
+                    device.emit(uinput.REL_X, (screen_width - int(x3))//2)
                     device.emit(uinput.REL_Y, int(y3)//2) 
 
-                    time.sleep(0.05)
+                    #time.sleep(0.02)
 
                 if fingers[1] == 1 and fingers[0] == 1:
                     cv2.rectangle(img,(reductionFrame,reductionFrame),(width-reductionFrame,height-reductionFrame),(255,255,255), 2)
                     lenght, img, linePoint = detector.findDistance(8,4,img,r=5)
-                    if lenght>110 and not mouseClicking:
+                    if lenght>110:
                         cv2.rectangle(img,(linePoint[4]-10,linePoint[5]-10),(linePoint[4]+10,linePoint[5]+10),(255,255,255),2)
-                        #device.emit_click(uinput.BTN_LEFT, 1)
-                        device.emit_click((0x01, 0x110), 1)
-                        mouseClicking = True
-                    else:
-                        mouseClicking = False                    
-                    device.emit(uinput.BTN_LEFT, 0)    
+                        
+                        device.emit(uinput.BTN_LEFT,1)
+                    
+                    device.emit(uinput.BTN_LEFT, 0)                  
+                    
 
             #fpsDisplay
             cTime = time.time()

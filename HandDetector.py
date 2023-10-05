@@ -50,23 +50,9 @@ class handDetector():
                     cv2.circle(img, (cx, cy), 5, (0, 255, 0), cv2.FILLED)
                     cv2.rectangle(img, (cx-13, cy-13), (cx+13,cy+13), (0, 255, 0), 2) 
 
-
             xmin, xmax = min(xList), max(xList)
             ymin, ymax = min(yList), max(yList)
             bbox = xmin, ymin, xmax, ymax
-
-            """
-            thumb_x, thumb_y = self.lmList[4][1], self.lmList[4][2]
-            index_x, index_y = self.lmList[8][1], self.lmList[8][2]
-            distance = math.sqrt((thumb_x - index_x)**2 + (thumb_y - index_y)**2)
-
-            if distance < 30:  
-                
-                cv2.rectangle(img, (cx - 15, cy - 15), (cx + 15, cy + 15), (255, 255, 255), cv2.FILLED)
-
-             if draw:
-                cv2.rectangle(img, (xmin - 20, ymin - 20), (xmax + 20, ymax + 20),
-                              (0, 255, 0), 2) """
 
         return self.lmList, bbox
     
@@ -86,7 +72,6 @@ class handDetector():
             else:
                 fingers.append(0)
 
-        # totalFingers = fingers.count(1)
 
         return fingers
     
@@ -126,33 +111,3 @@ def main():
 
 if __name__ == "__main__":
     main()    
-
-"""
-cap = cv2.VideoCapture(0)
-mpHands = mp.solutions.hands
-hands = mpHands.Hands(max_num_hands=1)
-mpDraw = mp.solutions.drawing_utils
-
-while True:
-    success, image = cap.read()
-    imageRGB = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    results = hands.process(imageRGB)
-    
-
-    # checking whether a hand is detected
-    if results.multi_hand_landmarks:
-        for handLms in results.multi_hand_landmarks: # working with each hand
-            for id, lm in enumerate(handLms.landmark):
-                h, w, c = image.shape
-                cx, cy = int(lm.x * w), int(lm.y * h)
-                print (cx, cy)
-                print(lm)
-
-                if id == 8 :
-                    cv2.circle(image, (cx, cy), 25, (255, 0, 255), cv2.FILLED)
-                    print(cx,cy)
-
-            mpDraw.draw_landmarks(image, handLms, mpHands.HAND_CONNECTIONS)
-    
-    cv2.imshow("Output", image)
-    cv2.waitKey(1)"""
