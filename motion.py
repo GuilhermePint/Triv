@@ -80,7 +80,6 @@ def main():
                 
                 #tip Up, move Mode
                 if fingers[1] == 1 and fingers[0] == 0 and fingers[2] == 0:
-                    print('indicador')
                     cv2.rectangle(img,(reductionFrame,reductionFrame),(width-reductionFrame,height-reductionFrame),(255,255,255), 2)
                     x3 = np.interp(x1,(reductionFrame,width-reductionFrame),(0,screen_width))
                     y3 = np.interp(y1,(reductionFrame,height-reductionFrame),(0,screen_height))
