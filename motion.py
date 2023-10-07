@@ -53,7 +53,6 @@ def main():
 
         #previous Frame
         pTime = 0
-        mouseClicking = False
 
         while True:
             #image and Hand Detection
@@ -61,7 +60,7 @@ def main():
             img = detector.findHand(img,draw=False)
             lmList, bbox = detector.findPosition(img)
 
-            if five_finger_timer == 30:
+            if five_finger_timer == 80:
                 break
 
             #tip and thumb
@@ -80,7 +79,7 @@ def main():
                     five_finger_timer = 0
                 
                 #tip Up, move Mode
-                if fingers[1] == 1 and fingers[0] == 0:
+                if fingers[1] == 1 and fingers[0] == 0 and fingers[2] == 0:
                     cv2.rectangle(img,(reductionFrame,reductionFrame),(width-reductionFrame,height-reductionFrame),(255,255,255), 2)
                     x3 = np.interp(x1,(reductionFrame,width-reductionFrame),(0,screen_width))
                     y3 = np.interp(y1,(reductionFrame,height-reductionFrame),(0,screen_height))
@@ -92,9 +91,8 @@ def main():
                     device.emit(uinput.REL_X, (screen_width - int(x3))//2)
                     device.emit(uinput.REL_Y, int(y3)//2) 
 
-                    #time.sleep(0.02)
 
-                if fingers[1] == 1 and fingers[0] == 1:
+                if fingers[1] == 1 and fingers[0] == 1 and fingers[2] == 0:
                     cv2.rectangle(img,(reductionFrame,reductionFrame),(width-reductionFrame,height-reductionFrame),(255,255,255), 2)
                     lenght, img, linePoint = detector.findDistance(8,4,img,r=5)
                     if lenght>110:
@@ -102,8 +100,20 @@ def main():
                         
                         device.emit(uinput.BTN_LEFT,1)
                     
-                    device.emit(uinput.BTN_LEFT, 0)                  
+                    device.emit(uinput.BTN_LEFT, 0)       
+                    time.sleep(0.02)
+
+                if fingers[1] == 1 and fingers[2] == 1 and fingers[0] == 0:
+                    cv2.rectangle(img,(reductionFrame,reductionFrame),(width-reductionFrame,height-reductionFrame),(255,255,255), 2)
+                    lenght, img, linePoint = detector.findDistance(12,8,img,r=5)
+                    print(lenght)
+                    if lenght<30:
+                        cv2.rectangle(img,(linePoint[4]-10,linePoint[5]-10),(linePoint[4]+10,linePoint[5]+10),(255,255,255),2)
+                        
+                        device.emit(uinput.BTN_RIGHT,1)
                     
+                    device.emit(uinput.BTN_RIGHT, 0)                
+                    time.sleep(0.02)
 
             #fpsDisplay
             cTime = time.time()

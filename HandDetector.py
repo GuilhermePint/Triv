@@ -41,6 +41,10 @@ class handDetector():
                 yList.append(cy)
                 # print(id, cx, cy)
                 self.lmList.append([id, cx, cy])
+                #middle Finger
+                if draw and id == 12:
+                    cv2.circle(img, (cx, cy), 5, (0, 255, 0), cv2.FILLED)
+                    cv2.rectangle(img, (cx-13, cy-13), (cx+13,cy+13), (0, 255, 0), 2)
                 #Tip
                 if draw and id == 8:
                     cv2.circle(img, (cx, cy), 5, (0, 255, 0), cv2.FILLED)
